@@ -36,7 +36,6 @@ export default {
 
 .wrapper {
   margin-top: 50px;
-  z-index: -1;
   background-color: #f2daed;
   opacity: 0.8;
   width: 80vw;

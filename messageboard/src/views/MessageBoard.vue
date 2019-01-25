@@ -1,7 +1,7 @@
 <template>
   <div class="background-box">
     <div class="titlename">留言板</div>
-    <img class="add-message" src="../assets/add.svg">
+    <img @click="goToWriting" class="add-message" src="../assets/add.svg">
 
     <div class="message-wrapper">
       <Message></Message>
@@ -9,17 +9,23 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 // @ is an alias to /src
 import Message from "../components/Message";
 export default {
   name: "messageboard",
   components: { Message },
-  methods: {}
+  methods: {
+      goToWriting() {
+      this.$router.push({
+        path: "/writing"
+      });
+    },
+  }
 };
 </script>
 
-<style>
+<style scoped>
 .background-box {
   height: 100vh;
   display: flex;
@@ -29,7 +35,6 @@ export default {
   background-attachment: fixed;
   background-size: cover;
   position: relative;
-  z-index: -1;
 }
 
 .titlename {

@@ -3,12 +3,12 @@
     <div class="box">
       <div class="text1">Hello Again</div>
       <div class="user-box">
-        <input type="text" placeholder="用户名">
+        <input v-model="username" class="login-input" placeholder="用户名">
       </div>
       <div class="password-box">
-        <input type="text" placeholder="密码">
+        <input v-model="password" class="login-input" type="password" placeholder="密码">
       </div>
-      <div class="button" @click="goToMessageBoard">登陆</div>
+      <div class="button" @click="login">登陆</div>
       <div class="back" @click="back">返回</div>
     </div>
   </div>
@@ -17,30 +17,58 @@
 <script>
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue'
-
+import urls from '@/apis/urls'
 export default {
-  name: "register",
+  name: "login",
   components: {},
+  data() {
+    return {
+      username:'',
+      password:'',
+    }
+  },
   methods: {
-    goToMessageBoard() {
-      this.$router.push({
-        path: "/messageboard"
-      });
-    },
     back() {
       this.$router.push({
         path: "/"
       });
+    },
+    async login() {
+      if(this.username.trim() === "" || this.password.trim() === ""){
+        alert("格式填写不对噢");
+        return
+      }
+      // const formData = new FormData()
+      // formData.append('username', this.username)
+      // formData.append('password', this.password)
+      const result = await this.axios({
+        method: "post",
+        url:urls.login,
+        data: {
+          username: this.username,
+          password: this.password
+        }
+        // data: formData
+      });
+      if (result.data.error === 0){
+        this.$store.commit('login',result.data.username)
+        this.$router.push({
+          path:"/MessageBoard"
+        })
+      }else if(result.data.error === 1){
+        alert('用户名或密码错误')
+        return
+      }
     }
   }
 };
 </script>
 
-<style>
-::placeholder {
+<style scoped>
+.login-input::placeholder {
   color: #40508c;
 }
-input {
+.login-input {
   border-color: #40508c;
   border-top-width: 0px;
   border-right-width: 0px;
@@ -49,7 +77,7 @@ input {
   width: 60vw;
 }
 
-input:focus {
+.login-input:focus {
   outline: none;
 }
 

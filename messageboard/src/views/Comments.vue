@@ -1,7 +1,7 @@
 <template>
   <div class="background-box">
     <div class="back-pic"></div>
-    <div class="back-txt">返回</div>
+    <div class="back-txt" @click="back">返回</div>
     <div class="comment-txt">评论</div>
     <div class="delete-pic"></div>
     <div class="message-wrapper">
@@ -10,13 +10,19 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 // @ is an alias to /src
 import Message from "../components/Message";
 export default {
   name: "comments",
   components: { Message },
-  methods: {}
+  methods: {
+    back() {
+      this.$router.push({
+        path: "/messageboard"
+      });
+    }
+  }
 };
 </script>
 
@@ -30,7 +36,7 @@ export default {
   background-attachment: fixed;
   background-size: cover;
   position: relative;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 .back-pic {
