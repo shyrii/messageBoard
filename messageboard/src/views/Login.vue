@@ -17,47 +17,57 @@
 <script>
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue'
-import urls from '@/apis/urls'
+import urls from "@/apis/urls";
 export default {
   name: "login",
   components: {},
   data() {
     return {
-      username:'',
-      password:'',
+      username: "",
+      password: ""
+    };
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo;
+    },
+    likeMessageID() {
+      return this.$store.state.likeMessageID;
     }
   },
   methods: {
     back() {
-      this.$router.push({
+      this.$router.replace({
         path: "/"
       });
     },
     async login() {
-      if(this.username.trim() === "" || this.password.trim() === ""){
+      if (this.username.trim() === "" || this.password.trim() === "") {
         alert("格式填写不对噢");
-        return
+        return;
       }
       // const formData = new FormData()
       // formData.append('username', this.username)
       // formData.append('password', this.password)
       const result = await this.axios({
         method: "post",
-        url:urls.login,
+        url: urls.login,
         data: {
           username: this.username,
           password: this.password
         }
         // data: formData
       });
-      if (result.data.error === 0){
-        this.$store.commit('login',result.data.username)
-        this.$router.push({
-          path:"/MessageBoard"
-        })
-      }else if(result.data.error === 1){
-        alert('用户名或密码错误')
-        return
+      if (result.data.error === 0) {
+        this.$store.commit("login", result.data.userInfo);
+        // this.$store.commit("initLikeMessageID", result.data.likeMessageID);
+        // this.$store.commit("initMyMessage", result.data.messageID);
+        this.$router.replace({
+          path: "/MessageBoard"
+        });
+      } else if (result.data.error === 1) {
+        alert("用户名或密码错误");
+        return;
       }
     }
   }

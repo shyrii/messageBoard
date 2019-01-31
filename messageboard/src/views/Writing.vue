@@ -3,10 +3,16 @@
     <div class="back-pic" @click="back"></div>
     <div class="back-txt" @click="back">返回</div>
     <div class="message-txt">留言</div>
-    <div class="publish-txt">发表</div>
+    <div class="publish-txt" @click="addMessage">发表</div>
     <!-- <input class="message-box"> -->
     <div class="message-box">
-      <textarea class="message-input" type="text" placeholder="留个言吧..." maxlength="100"></textarea>
+      <textarea
+        v-model="content"
+        class="message-input"
+        type="text"
+        placeholder="留个言吧..."
+        maxlength="200"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -14,11 +20,48 @@
 <script>
 // @ is an alias to /src
 // import Message from "../components/Message";
+import urls from "@/apis/urls";
 export default {
-  name: "comments",
-  components: { },
+  name: "writing",
+  data() {
+    return {
+      content: ""
+    };
+  },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo;
+    },
+    messages() {
+      return this.$store.state.messages;
+    },
+    myMessages() {
+      return this.$store.state.myMessages;
+    }
+  },
+  components: {},
   methods: {
     back() {
+      this.$router.push({
+        path: "/messageboard"
+      });
+    },
+    async addMessage() {
+      if (this.content.trim() === "" || !this.content) {
+        alert("内容不能为空哦");
+      } else if (this.content.length > 200) {
+        alert("字数太长了");
+      }
+      const result = await this.axios({
+        method: "post",
+        url: urls.addMessage,
+        data: {
+          userID: this.userInfo.userID,
+          content: this.content
+        }
+      });
+      // this.$store.commit("setMyMessage", result.data.myMessages[result.data.myMessages.length-1]);
+      this.$store.commit("setMessages", result.data.messages[result.data.messages.length-1]);
       this.$router.push({
         path: "/messageboard"
       });
@@ -30,7 +73,7 @@ export default {
 <style>
 .message-input {
   margin-top: 20px;
-  width:70vw;
+  width: 70vw;
   height: 200px;
   outline: none;
   border: none;

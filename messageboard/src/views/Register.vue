@@ -6,7 +6,7 @@
         <input v-model="username" class="register-input" type="text" placeholder="用户名">
       </div>
       <div class="password-box">
-        <input v-model="password" class="register-input" type="text" placeholder="密码">
+        <input v-model="password" class="register-input" type="password" placeholder="密码">
       </div>
       <div class="button" @click="register">注册</div>
       <div class="back" @click="back">返回</div>

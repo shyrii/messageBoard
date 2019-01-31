@@ -5,7 +5,7 @@ import Register from './views/Register.vue'
 import Login from './views/Login.vue'
 import MessageBoard from './views/MessageBoard.vue'
 import Writing from './views/Writing.vue'
-import Comments from './views/Comments.vue'
+// import Comments from './views/Comments.vue'
 
 Vue.use(Router)
 
@@ -44,10 +44,10 @@ export default new Router({
       name:'/writing',
       component:Writing
     },
-    {
-      path:'/comments',
-      name:'/comments',
-      component:Comments
-    }
+    // {
+    //   path:'/comments',
+    //   name:'/comments',
+    //   component:Comments
+    // }
   ]
 })
