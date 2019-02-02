@@ -5,12 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    token: "",
     loginState: false,
     userInfo: {},
     messages: [],
     likeMessageID: [],
     myMessages: [],
-    comments:[]
+    comments: []
 
   },
   mutations: {
@@ -27,26 +28,23 @@ export default new Vuex.Store({
     setMessages(state, payload) {
       state.messages.splice(0, 0, payload)
     },
-    // initMyMessage(state, payload) {
-    //   state.myMessages = payload
-    // },
-    // setMyMessage(state, payload) {
-    //   state.myMessages.splice(0, 0, payload)
-    // }, 
     deleteMessage(state, payload) {
       state.messages.splice(payload, 1)
     },
-    // deleteMymessage(state,payload) {
-    //   state.myMessages.splice(payload, 1)
-    // }
     likeMessage(state, payload) {
       state.messages[payload].likeUserId = 1
     },
     cancelLikeMessage(state, payload) {
       state.messages[payload].likeUserId = null
     },
-    setComments(state,payload) {
+    setComments(state, payload) {
       state.comments = payload
+    },
+    addComment(state, payload) {
+      state.comments.splice(0, 0, payload)
+    },
+    logout(state) {
+      state.loginState = false
     }
   },
   actions: {

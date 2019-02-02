@@ -11,6 +11,8 @@ export default {
     cancelLike: userID =>`${prefix}/cancel/${userID}`,
     deleteMessage: messageID =>`${prefix}/message/${messageID}`,
     getComment: messageID =>`${prefix}/comment/${messageID}`,
+    addComment: messageID =>`${prefix}/comment/${messageID}`,
+    logout: prefix + '/logout',
 }
 
 

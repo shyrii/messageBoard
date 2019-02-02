@@ -1,8 +1,9 @@
 <template>
   <div class="background-box">
+    <img @click="exit" class="exit" src="../assets/exit.svg">
     <div class="titlename">留言板</div>
     <img @click="goToWriting" class="add-message" src="../assets/add.svg">
-    <div class="message-list">
+    <div v-if="this.loginState===true" class="message-list">
       <div class="message-wrapper" v-for="(item,index) in this.messages" :key="item.id">
         <Message :item="item" @open="open" @close="close" :index="index"></Message>
       </div>
@@ -23,6 +24,9 @@ export default {
     };
   },
   computed: {
+    loginState() {
+      return this.$store.state.loginState;
+    },
     messages() {
       return this.$store.state.messages;
     },
@@ -30,34 +34,45 @@ export default {
       return this.$store.state.userInfo;
     }
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     if (this.isShow) {
-      this.isShow.close()
-      this.isShow = null
-      next(false)
+      this.isShow.close();
+      this.isShow = null;
+      next(false);
     } else {
-      next()
+      next();
     }
   },
   async mounted() {
-    const result = await this.axios({
-      method: "get",
-      url: urls.index(this.userInfo.userID)
-    });
-    this.$store.commit("initMessages", result.data.messages);
-    
+    if (this.loginState === true) {
+      const result = await this.axios({
+        method: "get",
+        url: urls.index(this.userInfo.userID)
+      });
+      this.$store.commit("initMessages", result.data.messages);
+    }
   },
   methods: {
     close() {
-      this.isShow = null
+      this.isShow = null;
     },
     open(ref) {
-      this.isShow = ref
+      this.isShow = ref;
     },
     goToWriting() {
       this.$router.push({
         path: "/writing"
       });
+    },
+    async exit() {
+      const result = await this.axios({
+        method: "get",
+        url: urls.logout
+      });
+      this.$router.push({
+        path: "/"
+      });
+      this.$store.commit("logout")
     }
   }
 };
@@ -73,6 +88,15 @@ export default {
   background-attachment: fixed;
   background-size: cover;
   position: relative;
+}
+
+.exit {
+  position: absolute;
+  left: 10px;
+  margin-top: 22px;
+  height: 32px;
+  width: 32px;
+  display: inline-block;
 }
 
 .titlename {

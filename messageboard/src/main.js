@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// import axios from './http'
 import axios from 'axios'
 import vueAxios from 'vue-axios'
 import infiniteScroll from 'vue-infinite-scroll';
@@ -14,3 +15,5 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+

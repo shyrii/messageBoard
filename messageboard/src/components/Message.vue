@@ -2,7 +2,6 @@
   <div class="container">
     <div class="wrapper">
       <div class="name">{{item.username}}</div>
-      <!-- <div class="message">樱花最美的时候，不是开得如火如荼时，而是即将死去，那一朵花细碎的花瓣凋零在空中，纷纷扬扬</div> -->
       <div class="message">
         <p>{{this.item.content}}</p>
       </div>
@@ -12,11 +11,7 @@
       <div class="chat-pic" @click="goToComments"></div>
       <div v-if="this.state===false" @click="like" class="like-pic1"></div>
       <div v-if="this.state===true" @click="cancelLike" class="like-pic2"></div>
-      <!-- <div class="delete-pic"></div> -->
     </div>
-    <!-- <transition name="fade" mode="out-in" appear>
-      <Comments v-show="isShow"></Comments>
-    </transition>-->
     <Comments v-if="isShow===true" @close="close" :item="this.item" :index="this.index"></Comments>
   </div>
 </template>
@@ -46,6 +41,9 @@ export default {
       } else {
         return false;
       }
+    },
+    comments() {
+      return this.$store.state.comments;
     }
   },
 

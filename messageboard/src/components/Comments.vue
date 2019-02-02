@@ -10,15 +10,31 @@
         <p>{{this.item.content}}</p>
       </div>
     </div>
+    <div class="comment-list">
+      <div class="comment-wrapper" v-for="(item,index) in this.comments" :key="item.id">
+        <CommentItem :item="item" :index="index"></CommentItem>
+      </div>
+    </div>
+    <div class="add-comments" id="add">
+      <input v-model="comment" class="comment-input" type="text" placeholder="  千头万绪，落笔汇成评论一句">
+      <div v-if="this.comment.length===0" class="no-send">发送</div>
+      <div v-else class="send" @click="sendComment">发送</div>
+    </div>
   </div>
 </template>
 
 <script scoped>
 // @ is an alias to /src
 import urls from "@/apis/urls";
+import CommentItem from "@/components/CommentItem";
 export default {
   name: "comments",
-  components: {},
+  data() {
+    return {
+      comment: ""
+    };
+  },
+  components: { CommentItem },
   props: ["item", "index"],
   computed: {
     messages() {
@@ -43,16 +59,33 @@ export default {
       this.$emit("close");
     },
     async deleteMessage() {
-      const result1 = await this.axios({
-        method: "delete",
-        url: urls.deleteMessage(this.item.messageID)
-      });
       this.$router.push({
         path: "/messageboard"
       });
+      const result = await this.axios({
+        method: "delete",
+        url: urls.deleteMessage(this.item.messageID)
+      });
       this.$store.commit("deleteMessage", this.index);
     },
-    
+    async sendComment() {
+      if (this.comment.trim() === "") {
+        return;
+      }
+      const result = await this.axios({
+        method: "post",
+        url: urls.addComment(this.item.messageID),
+        data: {
+          userID: this.userInfo.userID,
+          content: this.comment
+        }
+      });
+      this.$store.commit(
+        "addComment",
+        result.data.comments[result.data.comments.length - 1]
+      );
+      this.comment = "";
+    }
   }
 };
 </script>
@@ -167,5 +200,57 @@ export default {
   height: 140px;
   padding: 5px 15px;
   font-size: 16px;
+}
+
+.comment-list {
+  height: 300px;
+  margin-top: 20px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.comment-wrapper {
+  margin-top: 10px;
+}
+
+.add-comments {
+  position: fixed;
+  bottom: 0px;
+  width: 100vw;
+  height: 50px;
+  background-color: white;
+  opacity: 0.8;
+}
+
+.comment-input {
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+  border-color: #dbd6d6;
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  width: 85vw;
+}
+
+.comment-input:focus {
+  outline: none;
+}
+
+.no-send {
+  color: #ada9a9;
+  position: fixed;
+  bottom: 13px;
+  right: 10px;
+  font-size: 15px;
+}
+
+.send {
+  color: #252222;
+  position: fixed;
+  bottom: 13px;
+  right: 10px;
+  font-size: 15px;
 }
 </style>
